@@ -5,7 +5,7 @@
 > (those live in `projects/`).
 
 **Status:** Fresh install. The agent's core design is inherited and locked (see
-`design/decisions/` — ADRs 0001–0011). Nothing in-progress yet.
+`design/decisions/` — ADRs 0001–0018). Nothing in-progress yet.
 
 ## Done
 - Inherited a complete, stress-tested operating contract: kernel, methodology, container model,

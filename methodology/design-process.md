@@ -27,6 +27,11 @@ Tiers are anchors, not rails — tune per idea.
 **Ask:** What is it? What problem does it solve, for whom? Why now? What does great look like?
 What is explicitly *out* of scope?
 **Mode:** mostly interview/Socratic.
+**Discipline — diverge before converge:** Discovery's job is to *expand* the possibility space
+before narrowing it. Don't move to strawman / proposing a direction until several distinct framings
+have genuinely been surfaced and weighed — a single early-plausible option is *not* concreteness. If
+the user signals you're narrowing or rushing, treat it as confirmation you converged early: widen, don't
+defend (see `decisions/0017`; complements `0012`).
 **Exit:** a crisp one-paragraph problem statement + a north-star vision both sides agree on,
 **plus a proposed rigor tier** (see Right-sizing) confirmed with the user and recorded in `state.md`.
 **Artifact:** `vision.md`.
@@ -50,6 +55,11 @@ What are the big tradeoffs, and which did we pick and why?
 **Purpose:** specify each component well enough to build.
 **Ask:** For each: responsibility, interface/contract, internal approach, failure modes,
 dependencies.
+**Triage by criticality first.** Components vary wildly in stakes within one project — rank them
+by how much success rides on them and how uncertain they are. Make-or-break / high-uncertainty
+components earn adversarial depth (stress-test, alternatives, failure-hunting, maybe
+draft-and-critique); trivial ones earn a short spec and move on. This is right-sizing rigor
+(see `decisions/0008`) at the component grain (see `decisions/0013`).
 **Exit:** each major component has a spec someone could build from.
 **Artifact:** per-component specs.
 
@@ -76,6 +86,21 @@ design call we should have made? What's underspecified, ambiguous, or quietly as
 requirements lack a testable criterion? Resolve each finding (design fix / ADR) or convert it
 into an explicit "Open assumptions" entry. The gate is graded *only* after this. The pre-mortem
 is what makes ticking the gate honest, not self-congratulatory (see `decisions/0010`).
+**Capture it durably:** the pre-mortem emits `projects/<name>/pre-mortem.md` — each finding + its
+disposition (resolved → which fix/ADR, or carried → which Open Assumption), one line each. Grade
+the gate *against that ledger*, so the check survives a context clear between the pre-mortem and the
+gate (see `decisions/0015`). The handoff's "Open assumptions" are the survivors; this is the full ledger.
+**A green gate means *buildable*, not *validated*.** When a make-or-break assumption is empirical —
+prompt fidelity, ML performance, UX feel — it cannot be settled on paper; the gate certifies the
+design is coherent and complete enough to build, not that it will work. Say so explicitly in the
+handoff (a one-line caveat on the gate) so a passing gate is never over-read as proof.
+**Amendments — terminal is reversible (required, see `decisions/0016`):** a change that touches an
+already-gated design **re-opens Phase 6, proportionally to the change** — pre-mortem the *delta* (not
+the whole project, which already passed), append it to the existing `pre-mortem.md` ledger, re-grade
+the gate against the updated ledger, and update `HANDOFF.md`. **A checkpoint alone never re-closes a
+gated design** — only a re-graded gate restores "build-ready"; until then the project is "reopened,"
+not "complete." Scope the adversarial depth to the change (a one-line tweak ≠ a structural change);
+the gate itself never flexes.
 **Exit:** a valid `HANDOFF.md`. Format lives in `methodology/project-container.md`.
 
 ---

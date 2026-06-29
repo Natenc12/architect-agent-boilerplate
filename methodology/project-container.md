@@ -14,6 +14,12 @@ Two different things, kept separate on purpose:
 Why split them: it keeps reorientation cheap (read one small file), keeps `state.md` always
 relevant (no stale noise), and keeps the heavy record out of context until a phase needs it.
 
+**Keep the record in sync on backtrack.** When a later phase resolves or contradicts something an
+earlier artifact still lists as open (e.g. Requirements settles a question `vision.md` flagged as
+open), update that earlier artifact in the same checkpoint — at least its open/at-this-altitude
+lists. Keep it light: a one-line fix or deletion, not a rewrite; the "why" lives in ADRs. The
+checkpoint is the natural moment to sweep for this (see `decisions/0014`).
+
 **One-level undo.** At each checkpoint, `state.md` is copied to `state.prev.md` *before* being
 overwritten, so a botched checkpoint is always recoverable. `state.prev.md` is a recovery
 artifact only — never read on orient, so it costs nothing on the normal path. Full restorable
@@ -30,6 +36,7 @@ projects/<name>/
 ├── components/        # phase 3 — one spec per major component
 ├── decisions/         # ADRs, continuous (uses design/decisions/0000-template.md format)
 ├── roadmap.md        # phase 5 — build order / milestones
+├── pre-mortem.md     # phase 6 — adversarial-pass ledger (finding + disposition); gate graded against it (ADR 0015)
 └── HANDOFF.md        # terminal build-ready handoff — brief + manifest + readiness gate
 ```
 
@@ -69,15 +76,15 @@ structure self-teaching. (See `design/decisions/0004`.)
 The terminal artifact — what makes a project "done." Its primary reader is a **build-agent**
 (Claude in a build environment) that implements the design, with the user following along and
 adjudicating any rare load-bearing decision that surfaces (most are already made during design).
-It is **pointer-based, not a copy**: a tight brief + a reading-order manifest into the
-artifacts, so there's one source of truth and nothing drifts.
+It is **pointer-based, not a copy**: a tight brief + a reading-order manifest into the artifacts,
+so there's one source of truth and nothing drifts. This file owns the **format** (template below);
+the **protocol** for producing and validating a handoff — the readiness gate, the required
+pre-mortem and its durable ledger, the buildable-not-validated caveat, and the amendment re-gate
+loop — lives in `design-process.md` Phase 6, the single source of truth. Don't restate it here.
 
-The agent does **not** emit a valid handoff until the readiness gate passes — that gate is how
-"build-ready" (`decisions/0003`) is enforced rather than vibes. And the gate is graded **only
-after** a required pre-mortem: a deliberate adversarial pass that assumes the build failed and
-hunts for why, converting each finding into a design fix, an ADR, or an explicit "Open
-assumptions" entry. The pre-mortem is what keeps the self-administered gate honest
-(`decisions/0010`).
+One protocol consequence the format depends on: mid-amendment, `state.md` should read
+**"reopened,"** not "complete" — a checkpoint records state but never re-certifies build-readiness;
+only a re-graded gate does (`decisions/0016`).
 
 ```markdown
 # HANDOFF — <project name>
@@ -106,6 +113,9 @@ assumptions" entry. The pre-mortem is what keeps the self-administered gate hone
 - [ ] Success criteria are testable
 - [ ] Key tradeoffs are recorded as ADRs
 - [ ] Assumptions and explicit non-goals are stated
+
+> A green gate means *buildable*, not *validated* — if a make-or-break assumption is empirical,
+> say so here so it isn't over-read as proof. (Omit if nothing load-bearing rests on an empirical bet.)
 
 ## Open assumptions (the builder may proceed on these)
 - ...
