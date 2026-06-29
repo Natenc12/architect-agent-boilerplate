@@ -1,4 +1,4 @@
-# Architect Agent V0.1
+# Architect Agent V0.2
 
 A design studio where you bring an idea and Claude operates as a **software architect / system
 designer** — taking that idea from a one-line spark to a fully-specified system: features,
